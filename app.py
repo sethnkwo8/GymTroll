@@ -12,3 +12,4 @@ Session(app)
 # Index page
 @app.route("/")
 def index():
+    return render_template("index.html")
