@@ -2,10 +2,19 @@ body {
     background-color: #272727
 }
 
+h1{
+    color: #4198B2;
+    font-size: 60px;
+}
+
 nav{
     background-color: #272727
 }
 
 .container-fluid{
     background-color: #272727
+}
+
+.carousel-item{
+    font-family: ESKlarheitGrotesk, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", Oxygen, Ubuntu, "Droid Sans", "Helvetica Neue", sans-serif;
 }
