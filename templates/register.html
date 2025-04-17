@@ -5,5 +5,25 @@ GymTroll: Register
 {% endblock %}
 
 {% block main %}
-
+<h2>Register</h2>
+<div class="container-fluid custom-login">
+    <form action="/register" method="post">
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Username</label>
+            <input type="text" class="form-control" id="exampleFormControlInput1" name="username" placeholder="Username">
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Password</label>
+            <input type="password" class="form-control" id="exampleFormControlInput1" minlength="8" name="password" placeholder="Password">
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" id="exampleFormControlInput1" minlength="8" name="confirm" placeholder=" Confirm Password">
+        </div>
+        <button class="btn btn-secondary btn-lg" type="submit" >Sign Up</button>
+        <div class="no-account">
+            <a href="/login">Already have an account? Log In</a>
+        </div>
+    </form>
+</div>
 {% endblock %}

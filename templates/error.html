@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Error : {{code}} {{message}}
+{% endblock %}
+
+{% block main %}
+<div class="container-fluid">
+    <img src="/static/error.jpg" alt="error">
+</div>
+<div class="container-fluid custom-error-message">
+    <p>{{code}} {{message}}</p>
+</div>
+{% endblock %}

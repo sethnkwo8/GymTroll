@@ -13,6 +13,11 @@ h1{
     font-family: "COPPERPLATE"
 }
 
+h2{
+    color: white ;
+    font-size: 50px;
+}
+
 nav{
     background-color: #272727
 }
@@ -41,4 +46,30 @@ nav{
 
 .carousel-caption p {
     font-size: 40px;
+}
+
+.form-label{
+    color: white;
+    font-size: 30px;
+}
+
+.custom-error-message{
+    color: white;
+    font-size: 60px;
+    margin-top: 20px;
+    text-transform: capitalize;
+}
+
+.custom-login{
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 100px;
+}
+
+.custom-login button{
+    margin-bottom: 20px;
+}
+
+.main-content {
+    padding-top: 140px; /* Adjust this value based on your navbar height */
 }

@@ -5,5 +5,21 @@ GymTroll: Log In
 {% endblock %}
 
 {% block main %}
-
+<h2>Log In</h2>
+<div class="container-fluid custom-login">
+    <form action="/login" method="post">
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Username</label>
+            <input type="text" class="form-control" id="exampleFormControlInput1" name="username" placeholder="Username">
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Password</label>
+            <input type="password" class="form-control" id="exampleFormControlInput1" name="password" placeholder="Password">
+        </div>
+        <button class="btn btn-secondary btn-lg" type="submit" >Log In</button>
+        <div class="no-account">
+            <a href="/register">Don't have an account? Sign up</a>
+        </div>
+    </form>
+</div>
 {% endblock %}
