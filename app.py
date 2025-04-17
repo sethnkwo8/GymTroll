@@ -1,21 +1,46 @@
+from bcrypt import gensalt, checkpw, hashpw # For hashing passwords
 import sqlite3
+
+from datetime import timedelta # For session lifetime
 from flask import Flask, render_template, redirect, request, session
 from flask_session import Session
-import bcrypt #For hashing passwords
+from functools import wraps # For login decorator
+
 
 app = Flask(__name__)
 
 # Get app configurations from config file
 app.config.from_object('config')
 
+# Set the session lifetime to 2 hours
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(hours=2)
+
 # Activate Session
 Session(app)
+
+# Decorator for login_required
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get("user_id") is None:
+            return redirect('/login')
+        return f(*args, **kwargs)
+    return decorated_function
 
 # Get database connection
 def get_db_connection():
     connection = sqlite3.connect("gymtroll.db")
     connection.row_factory = sqlite3.Row
     return connection
+
+# Disables browser caching
+@app.after_request
+def after_request(response):
+    """Ensure responses aren't cached"""
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Expires"] = 0
+    response.headers["Pragma"] = "no-cache"
+    return response
 
 # Helper function for password hashing
 def gen_password_hash(input):
@@ -25,8 +50,8 @@ def gen_password_hash(input):
     password = input.encode('utf-8') if isinstance(input, str) else input
 
     # Generate salt and hash the password
-    salt = bcrypt.gensalt()
-    hashed = bcrypt.hashpw(password, salt)
+    salt = gensalt()
+    hashed = hashpw(password, salt)
     return hashed
 
 # Index page
@@ -34,16 +59,44 @@ def gen_password_hash(input):
 def index():
     return render_template("index.html")
 
+# Log in route
 @app.route("/login", methods = ["GET", "POST"])
 def login():
+
+    # Forget any user_id
+    session.clear()
+
+    # Get username and password from form
     username = request.form.get("username")
     password = request.form.get("password")
-    # if request.method == "POST":
-    #     if not username:
 
+    # Database connection
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    if request.method == "POST":
+        #  Validate form inputs
+        if not username:
+            return render_template("error.html", code = 403, message = "Please enter your username")
+        elif not password:
+            return render_template("error.html", code = 403, message = "Please enter your Password")
         
-    return render_template("login.html")
+        # Query database for user
+        rows = cursor.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchall()
 
+        #  Check if user exists and passwords match
+        if len(rows) != 1 or checkpw(password.encode('utf-8'), rows[0]["password"]):
+            return render_template("error.html", code = 403, message = "Invalid username and/or password")
+        
+        # Remember which user has logged in
+        session["user_id"] = rows[0]["id"]
+        session["username"] = rows[0]["username"]
+
+        return redirect("/")
+    
+    else:
+        return render_template("login.html")
+
+# Register route
 @app.route("/register", methods = ["GET", "POST"])
 def register():
     username = request.form.get("username")
@@ -57,11 +110,11 @@ def register():
         # Validate form inputs
         if not username:
             return render_template("error.html", code = 403, message = "Please enter a username")
-        if not password:
+        elif not password:
             return render_template("error.html", code = 403, message = "Please enter a Password")
-        if not confirm:
+        elif not confirm:
             return render_template("error.html", code = 403, message = "Please Confrim Password")
-        if confirm != password:
+        elif confirm != password:
             return render_template("error.html", code = 403, message = "Passwords don't match")
         
         # Checks if username exists
@@ -69,10 +122,21 @@ def register():
         if any(row["username"] == username for row in rows):
             return render_template("error.html", code = 403, message = "Username already exists")
         
-        
+        # Insert user data into database
         cursor.execute("INSERT INTO users(username, password) VALUES(?,?)", (username, hashed_password))
         connect.commit()
         connect.close()
         return redirect("/login")
 
+    # Display register page
     return render_template("register.html")
+
+# Log out route
+@app.route("/logout")
+@login_required
+def logout():
+    # Clear session
+    session.clear()
+
+    # Redirect to homepage
+    return redirect("/")
