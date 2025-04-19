@@ -5,6 +5,66 @@ GymTroll
 {% endblock %}
 
 {% block main %}
+
+{% if session["user_id"] %}
+<div class="container-fluid">
+  <h1>Welcome, {{session["username"]}}</h1>
+  <p style="color: white; font-size: 30px; margin-bottom: 50px;">Start your Workout Journey Now!</p>
+
+  <div class="container-fluid custom-login">
+    <div class="card text-center custom-plan" style="padding: 20px;">
+      <div class="card-header" style="font-size: 30px;">
+        Featured
+      </div>
+      <div class="card-body">
+        <h5 class="card-title" style="font-size: 30px;">Get your personalized workout program</h5>
+        <a href="#" class="btn btn-dark" style="margin-top: 20px; font-size: 20px;">Get Started</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="col">
+      <div class="card h-100">
+        <img src="/static/workouts.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">Workouts Library</h5>
+          <p class="card-text">Access a database of exercises with descriptions, videos, and variations.</p>
+        </div>
+        <div class="card-footer">
+          <a href="#" class="btn btn-primary">View Workouts</a>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card h-100">
+        <img src="/static/calorie_tracking.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">Calorie Tracking</h5>
+          <p class="card-text">Log your food intake and track your calorie and nutrient consumption.</p>
+        </div>
+        <div class="card-footer">
+          <a href="#" class="btn btn-primary">Track Your Calories</a>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card h-100">
+        <img src="/static/progress.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">Progress</h5>
+          <p class="card-text">View your progress reports in charts and graphs to visualize your journey.</p>
+        </div>
+        <div class="card-footer">
+          <a href="#" class="btn btn-primary">View Progress</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% else %}
 <div id="carouselExampleCaptions" class="carousel slide carousel-fade custom-carousel" data-bs-ride="carousel" data-bs-interval="3000">>
     <div class="carousel-indicators">
       <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -62,4 +122,6 @@ GymTroll
 <div class="container-fluid text-center">
     <button class="btn btn-secondary btn-lg" onclick="document.location='/register'" type="button" >Get Started</button>
   </div>
+
+{% endif %}
 {% endblock %}
