@@ -2,15 +2,10 @@ body {
     background-color: #272727
 }
 
-footer {
-    color: white;
-    font-size: 20px;
-}
-
 h1{
     color: #4198B2;
     font-size: 60px;
-    font-family: "COPPERPLATE"
+    font-family: "COPPERPLATE";
 }
 
 h2{
@@ -18,16 +13,39 @@ h2{
     font-size: 50px;
 }
 
-nav{
-    background-color: #272727
+footer {
+    color: white;
+    font-size: 20px;
 }
 
-.container-fluid{
-    background-color: #272727
+nav{
+    background-color: #272727;
+}
+
+.card-body{
+    background-color: #272727;
+    color: white;
+}
+
+.card-footer{
+    background-color: #272727;
+}
+
+.carousel-caption p {
+    font-size: 40px;
 }
 
 .carousel-item{
     font-family: ESKlarheitGrotesk, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", Oxygen, Ubuntu, "Droid Sans", "Helvetica Neue", sans-serif;
+}
+
+.col{
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.container-fluid{
+    background-color: #272727;
 }
 
 .custom-carousel {
@@ -38,18 +56,14 @@ nav{
     margin-bottom: 10px;
 }
 
+.custom-button{
+    margin-right: 10px;
+}
+
 .custom-carousel img {
     object-fit: cover; /* Ensure images fill the carousel without distortion */
     height: 100%; /* Make images fill the height of the carousel */
     width: 100%; /* Make images fill the width of the carousel */
-}
-
-.carousel-caption p {
-    font-size: 40px;
-}
-
-.custom-button{
-    margin-right: 10px;
 }
 
 .custom-error-message{
@@ -62,11 +76,18 @@ nav{
 .custom-login{
     border: 2px solid black;
     border-radius: 10px;
+    margin-bottom: 50px;
     padding: 100px;
 }
 
 .custom-login button{
     margin-bottom: 20px;
+}
+
+.custom-plan{
+    background-color: #272727;
+    border: 1px solid black;
+    color: #4198B2;
 }
 
 .custom-welcome{
@@ -80,4 +101,12 @@ nav{
 
 .main-content {
     padding-top: 140px; /* Adjust this value based on your navbar height */
+}
+
+#navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  transition: top 0.3s; /* Smooth transition */
+  z-index: 1000; /* Ensure it stays above other elements */
 }
