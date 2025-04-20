@@ -31,6 +31,27 @@ nav{
     background-color: #272727;
 }
 
+.custom-card-plan{
+    max-height: 650px; /* Adjust the height as needed */
+    overflow: hidden; /* Hide overflowing content */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+}
+
+/* Add a hover effect to the cards */
+.custom-card-plan:hover {
+    transform: scale(1.9); /* Slightly enlarge the card */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Add a shadow effect */
+    cursor: pointer; /* Change cursor to pointer */
+    background-color: #f8f9fa; /* Light gray background */
+    color: #4198B2; /* Change text color */
+    border: 1px solid #4198B2;
+}
+
+.custom-card-plan.selected {
+    border: 2px solid #4198B2; /* Highlight the selected card */
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+}
+
 .carousel-caption p {
     font-size: 40px;
 }
@@ -66,6 +87,13 @@ nav{
     width: 100%; /* Make images fill the width of the carousel */
 }
 
+.custom-container {
+   /* max-width: 1300px;  Adjust the width as needed */
+   /* max-height: 300px;  Adjust the height as needed */
+   /* overflow-y: auto;  Add scroll if content exceeds the height */
+   /* margin: 0 auto;  Center the container */
+}
+
 .custom-error-message{
     color: white;
     font-size: 60px;
@@ -87,7 +115,12 @@ nav{
 .custom-plan{
     background-color: #272727;
     border: 1px solid black;
+    border-radius: 10px;
     color: #4198B2;
+}
+
+.custom-plan label{
+    font-size: 30px;
 }
 
 .custom-welcome{
@@ -109,4 +142,39 @@ nav{
   width: 100%;
   transition: top 0.3s; /* Smooth transition */
   z-index: 1000; /* Ensure it stays above other elements */
+}
+
+progress {
+    width: 30%;
+    height: 16px;
+    appearance: none;
+}
+
+progress::-webkit-progress-bar {
+    background-color: #e0e0e0;
+    border-radius: 10px;
+}
+
+progress::-webkit-progress-value {
+    background-color: #4198B2;
+    border-radius: 10px;
+}
+
+progress::-moz-progress-bar {
+    background-color: #4198B2;
+}
+
+/* Initial state: hidden and slightly moved */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px); /* Move slightly down */
+    animation: fadeIn 1s ease-out forwards; /* Animation */
+}
+
+/* Keyframes for fade-in effect */
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0); /* Move to original position */
+    }
 }

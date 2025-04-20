@@ -5,5 +5,40 @@ GymTroll: Create your plan
 {% endblock %}
 
 {% block main %}
-
+<div class="custom-container custom-plan fade-in">
+    <label for="file">Create your plan</label>
+    <progress id="file" value="25" max="100"> 25% </progress>
+    
+    <p style="font-size: 50px;">What is your goal?</p>
+    <div class="row row-cols-1 row-cols-md-3 g-4 fade-in" style="padding: 10px;">
+        <div class="col">
+          <div class="card h-100 fade-in custom-card-plan" data-id="weight-loss" >
+            <img src="/static/weight_loss.JPG" class="card-img-top" alt="weight loss">
+            <div class="card-body">
+              <h5 class="card-title">Weight Loss</h5>
+              <p class="card-text">Ready to shed extra pounds and feel your best? Our weight loss programs combine expert-guided workouts, cardio, and strength training to help you burn fat, build lean muscle, and boost your metabolism.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card h-100 fade-in custom-card-plan" data-id="cutting">
+            <img src="/static/cutting copy.png" class="card-img-top" alt="cutting">
+            <div class="card-body">
+              <h5 class="card-title">Cutting</h5>
+              <p class="card-text">Time to get lean and defined. Our cutting program helps you drop body fat while preserving hard-earned muscle. Through high-intensity training, smart nutrition, and expert coaching, you’ll sculpt a stronger, sharper physique — just in time to show it off.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card h-100 fade-in custom-card-plan" data-id="bulking">
+            <img src="/static/bulking.JPG" class="card-img-top" alt="bulking">
+            <div class="card-body">
+              <h5 class="card-title">Bulking</h5>
+              <p class="card-text">Looking to pack on serious muscle? Our bulking program is designed to help you gain size and strength the right way. With targeted weight training, tailored nutrition guidance, and progressive overload strategies, you'll build lean mass and boost performance — no fluff, just results.</p>
+            </div>
+          </div>
+        </div>
+    </div>
+    <button class="btn btn-primary btn-lg" style="margin-bottom: 20px;"> Next</button>
+</div>
 {% endblock %}

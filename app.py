@@ -145,4 +145,8 @@ def logout():
     # Redirect to homepage
     return redirect("/")
 
-@app
+@app.route("/plan")
+@login_required
+def plan():
+
+    return render_template("plan1.html")
