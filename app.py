@@ -84,7 +84,7 @@ def login():
         rows = cursor.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchall()
 
         #  Check if user exists and passwords match
-        if len(rows) != 1 or checkpw(password.encode('utf-8'), rows[0]["password"]):
+        if len(rows) != 1 or not checkpw(password.encode('utf-8'), rows[0]["password"]):
             return render_template("error.html", code = 403, message = "Invalid username and/or password")
         
         # Remember which user has logged in
@@ -99,6 +99,8 @@ def login():
 # Register route
 @app.route("/register", methods = ["GET", "POST"])
 def register():
+    first_name = request.form.get("first_name")
+    last_name = request.form.get("last_name")
     username = request.form.get("username")
     password = request.form.get("password")
     confirm = request.form.get("confirm")
@@ -108,7 +110,9 @@ def register():
 
     if request.method == "POST":
         # Validate form inputs
-        if not username:
+        if not first_name or not last_name:
+            return render_template("error.html", code = 403, message = "Please enter your name")
+        elif not username:
             return render_template("error.html", code = 403, message = "Please enter a username")
         elif not password:
             return render_template("error.html", code = 403, message = "Please enter a Password")
@@ -123,7 +127,7 @@ def register():
             return render_template("error.html", code = 403, message = "Username already exists")
         
         # Insert user data into database
-        cursor.execute("INSERT INTO users(username, password) VALUES(?,?)", (username, hashed_password))
+        cursor.execute("INSERT INTO users(first_name, last_name, username, password) VALUES(?,?,?,?)", (first_name , last_name, username, hashed_password))
         connect.commit()
         connect.close()
         return redirect("/login")
@@ -140,3 +144,5 @@ def logout():
 
     # Redirect to homepage
     return redirect("/")
+
+@app

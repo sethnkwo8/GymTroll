@@ -9,6 +9,14 @@ GymTroll: Register
 <div class="container-fluid custom-login">
     <form action="/register" method="post">
         <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Full Name</label>
+            <div class="input-group">
+                <span class="input-group-text">First and last name</span>
+                <input type="text" aria-label="First name" class="form-control me-2" name="first_name">
+                <input type="text" aria-label="Last name" class="form-control" name="last_name">
+              </div>
+        </div>
+        <div class="mb-3">
             <label for="exampleFormControlInput1" class="form-label">Username</label>
             <input type="text" class="form-control" id="exampleFormControlInput1" name="username" placeholder="Username">
         </div>
