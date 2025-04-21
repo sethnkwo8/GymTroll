@@ -145,8 +145,20 @@ def logout():
     # Redirect to homepage
     return redirect("/")
 
-@app.route("/plan")
+@app.route("/plan", methods = ["GET","POST"])
 @login_required
 def plan():
+    goal = request.form.get("card-input")
+    split = request.form.get("split")
+    current_weight = request.form.get("current-weight")
+    desired_weight = request.form.get("desired-weight")
+    session["goal"] = goal
+    session["split"] = split
+    session["current_weight"] = current_weight
+    session["desired_weight"] = desired_weight
+    # connection = get_db_connection()
+    # cursor = connection.cursor()
+    # cursor.execute("INSERT INTO user_details (username, goal) VALUES(?,?)", (session["username"], goal))
+    
 
     return render_template("plan1.html")

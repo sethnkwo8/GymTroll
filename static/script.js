@@ -31,3 +31,9 @@ document.querySelectorAll('.custom-card-plan').forEach(card => {
         // window.location.href = `/${cardId}`;
     });
 });
+
+document.querySelectorAll('input[name="card-input"]').forEach(input => {
+    input.addEventListener('change', () => {
+        input.closest('form').submit(); // Automatically submit the form
+    });
+});
