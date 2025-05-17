@@ -1,0 +1,109 @@
+{% extends "layout.html" %}
+
+{% block title%}
+GymTroll: Create your plan
+{% endblock %}
+
+{% block main %}
+<div class="custom-container custom-plan fade-in" style="padding: 10px;">
+
+    {% if step == "goal" %}
+
+    <form action="/plan" method="post">
+        <label for="file" style="font-size: 25px;">Create your plan</label>
+    <hr style="color: black;">
+    <progress id="file" value="25" max="100"> 25% </progress>
+   
+    <p style="font-size: 50px;">What is your goal?</p>
+    <form action="/plan" method="post">
+    <div class="row row-cols-1 row-cols-md-3 g-4 fade-in" style="padding: 10px;">
+        <div class="col">
+            <input type="radio" class="btn-check" name="card-input" id="weight-loss" value="weight-loss" autocomplete="off">
+            <label class="card h-100 fade-in custom-card-plan" for="weight-loss">
+                <img src="/static/weight_loss.JPG" class="card-img-top" alt="weight loss">
+<div class="card-body">
+                <h5 class="card-title">Weight Loss</h5>
+                    <p class="card-text">Ready to shed extra pounds and feel your best? Our weight loss programs combine expert-guided workouts, cardio, and strength training to help you burn fat, build lean muscle, and boost your metabolism.</p>
+                </div>
+            </label>
+        </div>
+        <div class="col">
+            <input type="radio" class="btn-check" name="card-input" id="cutting" value="cutting" autocomplete="off">
+            <label class="card h-100 fade-in custom-card-plan" for="cutting">
+                <img src="/static/cutting copy.png" class="card-img-top" alt="cutting">
+                <div class="card-body">
+                    <h5 class="card-title">Cutting</h5>
+                    <p class="card-text">Time to get lean and defined. Our cutting program helps you drop body fat while preserving hard-earned muscle through a strategic balance of calorie control, high-protein nutrition, and focused training.</p>
+                </div>
+            </label>
+        </div>
+        <div class="col">
+            <input type="radio" class="btn-check" name="card-input" id="bulking" value="bulking" autocomplete="off">
+            <label class="card h-100 fade-in custom-card-plan" for="bulking">
+                <img src="/static/bulking.jpg" class="card-img-top" alt="bulking">
+                <div class="card-body">
+                    <h5 class="card-title">Bulking</h5>
+                    <p class="card-text">Looking to pack on serious muscle? Our bulking program is designed to help you gain size and strength the right way by combining a calorie-surplus diet with heavy, consistent training.</p>
+                </div> 
+            </label>
+        </div>
+    </div>
+    </form>
+
+    {% elif step == "split" %}
+    <p style="font-size: 50px;">How many days split do you want?</p>
+    <form action="/plan" method="post">
+        <select class="form-select form-select-lg mb-3 custom-select" name="split" aria-label="Select your split">
+            <option value="" disabled selected>Choose your split</option>
+            <option value="3">Three</option>
+            <option value="4">Four</option>
+            <option value="5">Five</option>
+            <option value="5">Six</option>
+            <option value="5">Seven</option>
+        </select>
+        <button type="submit" class="btn btn-primary btn-lg" style="margin-top: 20px;">Next</button>
+    </form>
+
+    {% elif step == "current_weight" %}
+    <p style="font-size: 50px;">What is your current weight?</p>
+    <form action="/plan" method="post">
+        <input type="number" min="30" max="250" name="current-weight" class="form-control" placeholder="Current weight (kg)">
+        <button type="submit" class="btn btn-primary btn-lg" style="margin-top: 20px;">Next</button>
+    </form>
+
+    {% elif step == "desired_weight" %}
+    <p style="font-size: 50px;">What is your desired weight?</p>
+    <form action="/plan" method="post">
+        <input type="number" min="30" max="250" name="desired-weight" class="form-control" placeholder="Desired weight (kg)">
+        <button type="submit" class="btn btn-primary btn-lg" style="margin-top: 20px;">Next</button>
+    </form>
+
+    {% elif step == "workout" %}
+    <p style="font-size: 50px;">Where do you prefer to workout?</p>
+    <form action="/plan" method="post">
+        <div class="row row-cols-1 row-cols-md-2 g-4 fade-in" style="padding: 10px;">
+            <div class="col">
+                <input type="radio" class="btn-check" name="card-input-workout" id="home-workout" value="home-workout" autocomplete="off">
+                <label class="card h-100 fade-in custom-card-workout" for="home-workout">
+                    <img src="/static/homeworkout .jpg" class="card-img-top" alt="home-workout">
+                    <div class="card-body">
+                        <h5 class="card-title">Home</h5>
+                    </div> 
+                </label>
+            </div>
+            <div class="col">
+                <input type="radio" class="btn-check" name="card-input-workout" id="gym-workout" value="gym-workout" autocomplete="off">
+                <label class="card h-100 fade-in custom-card-workout" for="gym-workout">
+                    <img src="/static/Gym pov.jpg" class="card-img-top" alt="gym-workout">
+                    <div class="card-body">
+                        <h5 class="card-title">Gym</h5>
+                    </div> 
+                </label>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg" style="margin-top: 20px;">Submit</button>
+    </form>
+
+    {% endif %}
+</div>
+{% endblock %}

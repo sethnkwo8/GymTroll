@@ -37,3 +37,9 @@ document.querySelectorAll('input[name="card-input"]').forEach(input => {
         input.closest('form').submit(); // Automatically submit the form
     });
 });
+
+// Show loading screen on form submission
+document.getElementById("plan-form").addEventListener("submit", function (event) {
+    // Show the loading screen
+    document.getElementById("loading-screen").style.display = "flex";
+});

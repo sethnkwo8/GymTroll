@@ -145,20 +145,69 @@ def logout():
     # Redirect to homepage
     return redirect("/")
 
-@app.route("/plan", methods = ["GET","POST"])
+@app.route("/plan", methods=["GET", "POST"])
 @login_required
 def plan():
-    goal = request.form.get("card-input")
-    split = request.form.get("split")
-    current_weight = request.form.get("current-weight")
-    desired_weight = request.form.get("desired-weight")
-    session["goal"] = goal
-    session["split"] = split
-    session["current_weight"] = current_weight
-    session["desired_weight"] = desired_weight
-    # connection = get_db_connection()
-    # cursor = connection.cursor()
-    # cursor.execute("INSERT INTO user_details (username, goal) VALUES(?,?)", (session["username"], goal))
-    
+    if request.method == "POST":
+        # Step 1: Goal Selection
+        if "card-input" in request.form:
+            goal = request.form.get("card-input")
+            if not goal:
+                return render_template("error.html", code=400, message="Please select a goal.")
+            session["goal"] = goal  # Save goal to session
+            return redirect("/plan")  # Redirect to the next step
 
-    return render_template("plan1.html")
+        # Step 2: Split Selection
+        if "split" in request.form:
+            split = request.form.get("split")
+            if not split:
+                return render_template("error.html", code=400, message="Please select a workout split.")
+            session["split"] = split  # Save split to session
+            return redirect("/plan")  # Redirect to the next step
+
+        # Step 3: Current Weight
+        if "current-weight" in request.form:
+            current_weight = request.form.get("current-weight")
+            if not current_weight or not current_weight.isdigit() or int(current_weight) < 30 or int(current_weight) > 250:
+                return render_template("error.html", code=400, message="Please enter a valid current weight (30-250 kg).")
+            session["current_weight"] = current_weight  # Save current weight to session
+            return redirect("/plan")  # Redirect to the next step
+
+        # Step 4: Desired Weight
+        if "desired-weight" in request.form:
+            desired_weight = request.form.get("desired-weight")
+            if not desired_weight or not desired_weight.isdigit() or int(desired_weight) < 30 or int(desired_weight) > 250:
+                return render_template("error.html", code=400, message="Please enter a valid desired weight (30-250 kg).")
+            session["desired_weight"] = desired_weight  # Save desired weight to session
+            return redirect("/plan")  # Redirect to the next step
+
+        # Step 5: Workout Preference
+        if "card-input-workout" in request.form:
+            workout = request.form.get("card-input-workout")
+            if not workout:
+                return render_template("error.html", code=400, message="Please select where you prefer to work out.")
+            session["workout"] = workout  # Save workout preference to session
+
+            # Save all data to the database
+            connection = get_db_connection()
+            cursor = connection.cursor()
+            cursor.execute(
+                "INSERT INTO user_details (username, goal, days_split, weight_kg, desired_weight, workout_type) VALUES (?,?,?,?,?,?)",
+                (session["username"], session["goal"], session["split"], session["current_weight"], session["desired_weight"], session["workout"])
+            )
+            connection.commit()
+            connection.close()
+
+            return render_template("success.html", goal=session["goal"], split=session["split"], current_weight=session["current_weight"], desired_weight=session["desired_weight"], workout=session["workout"])
+
+    # Render the appropriate step based on session data
+    if "goal" not in session:
+        return render_template("plan.html", step="goal")
+    elif "split" not in session:
+        return render_template("plan.html", step="split")
+    elif "current_weight" not in session:
+        return render_template("plan.html", step="current_weight")
+    elif "desired_weight" not in session:
+        return render_template("plan.html", step="desired_weight")
+    elif "workout" not in session:
+        return render_template("plan.html", step="workout")
