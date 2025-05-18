@@ -211,3 +211,11 @@ def plan():
         return render_template("plan.html", step="desired_weight")
     elif "workout" not in session:
         return render_template("plan.html", step="workout")
+    
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")

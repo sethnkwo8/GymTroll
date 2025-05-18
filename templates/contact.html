@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title %}
+GymTroll: Contact Us
+{% endblock %}
+
+{% block main %}
+
+<h1>Contact Us</h1>
+
+<div class="custom-container custom-plan fade-in" style="padding: 20px;">
+    <form action="/contact" method="post">
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label" style="font-size: 30px;">Title</label>
+            <input type="text" class="form-control" id="exampleFormControlInput1">
+          </div>
+          <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label" style="font-size: 30px;">Message</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="6"></textarea>
+          </div>
+
+          <button class="btn btn-secondary btn-lg" type="submit"> Submit</button>
+    </form>
+</div>
+{% endblock %}
