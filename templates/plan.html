@@ -9,7 +9,6 @@ GymTroll: Create your plan
 
     {% if step == "goal" %}
 
-    <form action="/plan" method="post">
         <label for="file" style="font-size: 25px;">Create your plan</label>
     <hr style="color: black;">
     <progress id="file" value="25" max="100"> 25% </progress>
@@ -79,31 +78,45 @@ GymTroll: Create your plan
     </form>
 
     {% elif step == "workout" %}
-    <p style="font-size: 50px;">Where do you prefer to workout?</p>
-    <form action="/plan" method="post">
-        <div class="row row-cols-1 row-cols-md-2 g-4 fade-in" style="padding: 10px;">
-            <div class="col">
-                <input type="radio" class="btn-check" name="card-input-workout" id="home-workout" value="home-workout" autocomplete="off">
-                <label class="card h-100 fade-in custom-card-workout" for="home-workout">
-                    <img src="/static/homeworkout .jpg" class="card-img-top" alt="home-workout">
-                    <div class="card-body">
-                        <h5 class="card-title">Home</h5>
-                    </div> 
-                </label>
-            </div>
-            <div class="col">
-                <input type="radio" class="btn-check" name="card-input-workout" id="gym-workout" value="gym-workout" autocomplete="off">
-                <label class="card h-100 fade-in custom-card-workout" for="gym-workout">
-                    <img src="/static/Gym pov.jpg" class="card-img-top" alt="gym-workout">
-                    <div class="card-body">
-                        <h5 class="card-title">Gym</h5>
-                    </div> 
-                </label>
-            </div>
+    <div id="content-container">
+        <p style="font-size: 50px;">Where do you prefer to workout?</p>
+        <div class="card-body">
+            <form action="/plan" method="post">
+                <div class="row row-cols-1 row-cols-md-2 g-4 fade-in" style="padding: 10px;">
+                    <div class="col">
+                        <input type="radio" class="btn-check" name="card-input-workout" id="home-workout" value="home-workout" autocomplete="off">
+                        <label class="card h-100 fade-in custom-card-workout" for="home-workout">
+                            <img src="/static/homeworkout .jpg" class="card-img-top" alt="home-workout">
+                            <div class="card-body">
+                                <h5 class="card-title">Home</h5>
+                            </div> 
+                        </label>
+                    </div>
+                    <div class="col">
+                        <input type="radio" class="btn-check" name="card-input-workout" id="gym-workout" value="gym-workout" autocomplete="off">
+                        <label class="card h-100 fade-in custom-card-workout" for="gym-workout">
+                            <img src="/static/Gym pov.jpg" class="card-img-top" alt="gym-workout">
+                            <div class="card-body">
+                                <h5 class="card-title">Gym</h5>
+                            </div> 
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg" id="submit-button" style="margin-top: 20px;">Submit</button>
+            </form>
         </div>
-        <button type="submit" class="btn btn-primary btn-lg" style="margin-top: 20px;">Submit</button>
-    </form>
+    </div>
 
     {% endif %}
+
+
+<!-- Loading Screen -->
+<div id="loading-screen" class="loading-screen" style="display: none;">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    <p style="color: white; font-size: 20px; margin-top: 10px;">Creating your plan...</p>
+</div>
+
 </div>
 {% endblock %}
