@@ -152,8 +152,7 @@ def plan():
     print("Username:", session.get("username"))
 
     if request.method == "POST":
-        print("Form Data:", request.form)
-        print("Session Data:", session)
+
         # Step 1: Goal Selection
         if "card-input" in request.form:
             goal = request.form.get("card-input")
@@ -161,8 +160,7 @@ def plan():
             if not goal:
                 return render_template("error.html", code=400, message="Please select a goal.")
             session["goal"] = goal
-            print("Goal set in session:", session["goal"])  # Debugging log
-            print("Redirecting to next step with session data:", session)
+
             return redirect("/plan")
 
         # Step 2: Split Selection
@@ -172,8 +170,7 @@ def plan():
             if not split:
                 return render_template("error.html", code=400, message="Please select a workout split.")
             session["split"] = split
-            print("Split set in session:", session["split"])  # Debugging log
-            print("Redirecting to next step with session data:", session)
+
             return redirect("/plan")
 
         # Step 3: Current Weight
@@ -182,8 +179,7 @@ def plan():
             if not current_weight or not current_weight.isdigit() or int(current_weight) < 30 or int(current_weight) > 250:
                 return render_template("error.html", code=400, message="Please enter a valid current weight (30-250 kg).")
             session["current_weight"] = current_weight  # Save current weight to session
-            print("Current Weight set:", session["current_weight"])  # Debugging log
-            print("Redirecting to next step with session data:", session)
+
             return redirect("/plan")  # Redirect to the next step
 
         # Step 4: Desired Weight
@@ -192,8 +188,7 @@ def plan():
             if not desired_weight or not desired_weight.isdigit() or int(desired_weight) < 30 or int(desired_weight) > 250:
                 return render_template("error.html", code=400, message="Please enter a valid desired weight (30-250 kg).")
             session["desired_weight"] = desired_weight  # Save desired weight to session
-            print("Desired Weight set:", session["desired_weight"])  # Debugging log
-            print("Redirecting to next step with session data:", session)
+
             return redirect("/plan")  # Redirect to the next step
 
         # Step 5: Workout Preference
@@ -203,8 +198,6 @@ def plan():
             if not workout:
                 return render_template("error.html", code=400, message="Please select where you prefer to work out.")
             session["workout"] = workout  # Save workout preference to session
-            print("Workout set in session:", session["workout"])  # Debugging log
-            print("Session Data after setting workout:", session)
 
             # Save all data to the database
             connection = get_db_connection()
@@ -231,13 +224,6 @@ def plan():
         return render_template("plan.html", step="workout")
 
     print("Session Data:", session)
-    
-    print("Username:", session.get("username"))
-    print("Goal:", session.get("goal"))
-    print("Split:", session.get("split"))
-    print("Current Weight:", session.get("current_weight"))
-    print("Desired Weight:", session.get("desired_weight"))
-    print("Workout:", session.get("workout"))
 
 @app.route("/about")
 def about():
@@ -250,4 +236,44 @@ def contact():
 @app.route("/final_plan")
 @login_required
 def final_plan():
-    return render_template("final_plan.html")
+    connect = get_db_connection()
+    cursor = connect.cursor()
+
+    # Fetch session variables
+    goal = session.get("goal")
+    split = session.get("split")
+    environment = session.get("workout")
+    current_weight = int(session.get("current_weight"))
+    desired_weight = int(session.get("desired_weight"))
+
+    # Determine weight change direction
+    if current_weight > desired_weight:
+        weight_change = "decrease"
+    else:
+        weight_change = "increase"
+
+    if environment == "home-workout":
+        environment = "home"
+    else:
+        environment = "gym"
+    
+ 
+
+    # Example SQL query (adjust table/column names as needed)
+    cursor.execute(
+        """
+        SELECT workout_plan
+        FROM workout_plans
+        WHERE goal = ?
+          AND split = ?
+          AND environment = ?
+          AND weight_change = ?
+        """,
+        (goal, split, environment, weight_change)
+    )
+    plan_row = cursor.fetchone()
+    connect.close()
+
+    workout_plan = plan_row["workout_plan"] if plan_row else None
+
+    return render_template("final_plan.html", workout_plan=workout_plan)
