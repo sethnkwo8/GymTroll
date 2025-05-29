@@ -91,6 +91,16 @@ def login():
         session["user_id"] = rows[0]["id"]
         session["username"] = rows[0]["username"]
 
+        cursor.execute(
+    "SELECT last_workout_plan FROM user_details WHERE username = ?",
+    (session["username"],)
+    )
+        row = cursor.fetchone()
+        if row and row["last_workout_plan"]:
+            session["workout_plan"] = row["last_workout_plan"]
+        else:
+            session["workout_plan"] = None
+
         return redirect("/")
     
     else:
@@ -148,15 +158,11 @@ def logout():
 @app.route("/plan", methods=["GET", "POST"])
 @login_required
 def plan():
-    print("Session Data:", session)  # Add this at the start of the route
-    print("Username:", session.get("username"))
-
     if request.method == "POST":
 
         # Step 1: Goal Selection
         if "card-input" in request.form:
             goal = request.form.get("card-input")
-            print("Goal Submitted:", goal)  # Debugging log
             if not goal:
                 return render_template("error.html", code=400, message="Please select a goal.")
             session["goal"] = goal
@@ -166,7 +172,6 @@ def plan():
         # Step 2: Split Selection
         if "split" in request.form:
             split = request.form.get("split")
-            print("Split Submitted:", split)  # Debugging log
             if not split:
                 return render_template("error.html", code=400, message="Please select a workout split.")
             session["split"] = split
@@ -194,10 +199,21 @@ def plan():
         # Step 5: Workout Preference
         if "card-input-workout" in request.form:
             workout = request.form.get("card-input-workout")
-            print("Workout Submitted:", workout)  # Debugging log
             if not workout:
                 return render_template("error.html", code=400, message="Please select where you prefer to work out.")
             session["workout"] = workout  # Save workout preference to session
+
+            # Check if user already submitted a plan this session
+            connection = get_db_connection()
+            cursor = connection.cursor()
+            cursor.execute(
+                "SELECT id FROM user_details WHERE username = ?",
+                (session["username"],)
+            )
+            existing = cursor.fetchone()
+            if existing:
+                connection.close()
+                return render_template("error.html", code=400, message="You have already submitted your plan for this session.")
 
             # Save all data to the database
             connection = get_db_connection()
@@ -205,6 +221,52 @@ def plan():
             cursor.execute(
                 "INSERT INTO user_details (username, goal, days_split, weight_kg, desired_weight, workout_type) VALUES (?,?,?,?,?,?)",
                 (session["username"], session["goal"], session["split"], session["current_weight"], session["desired_weight"], session["workout"])
+            )
+            connection.commit()
+            connection.close()
+
+            
+            # After inserting the new plan in /plan route, before redirecting to /final_plan
+            goal = session.get("goal")
+            if goal == "weight-loss":
+                goal = "weight loss"
+            split = int(session.get("split"))
+            current_weight = session.get("current_weight")
+            desired_weight = session.get("desired_weight")
+            workout = session.get("workout")
+            
+            if int(current_weight) > int(desired_weight):
+                weight_change = "decrease"
+            else:
+                weight_change = "increase"
+                
+            if workout == "home-workout":
+                environment = "home"
+            else:
+                environment = "gym"
+
+            connection = get_db_connection()
+            cursor = connection.cursor()
+            cursor.execute(
+                """
+                SELECT workout_plan FROM workout_plans
+                WHERE goal = ?
+                AND split = ?
+                AND environment = ?
+                AND weight_change = ?
+                """,
+                (goal, split, environment, weight_change)
+            )
+            plan_row = cursor.fetchone()
+            if plan_row:
+                generated_plan = plan_row["workout_plan"]
+            else:
+                generated_plan = "No plan found for your selection."
+
+            # Update the last_workout_plan column for this user
+            cursor.execute(
+                "UPDATE user_details SET last_workout_plan = ? WHERE username = ?",
+                (generated_plan, session["username"])
             )
             connection.commit()
             connection.close()
@@ -222,8 +284,9 @@ def plan():
         return render_template("plan.html", step="desired_weight")
     elif "workout" not in session:
         return render_template("plan.html", step="workout")
+    
+    return redirect("/final_plan")
 
-    print("Session Data:", session)
 
 @app.route("/about")
 def about():
@@ -239,41 +302,48 @@ def final_plan():
     connect = get_db_connection()
     cursor = connect.cursor()
 
-    # Fetch session variables
-    goal = session.get("goal")
-    split = session.get("split")
-    environment = session.get("workout")
-    current_weight = int(session.get("current_weight"))
-    desired_weight = int(session.get("desired_weight"))
+    # # Fetch session variables
+    # goal = session.get("goal")
+    # split = session.get("split")
+    # environment = session.get("workout")
+    # current_weight = session.get("current_weight")
+    # desired_weight = session.get("desired_weight")
 
-    # Determine weight change direction
-    if current_weight > desired_weight:
-        weight_change = "decrease"
-    else:
-        weight_change = "increase"
+    # # Determine weight change direction
+    # if int(current_weight) > int(desired_weight):
+    #     weight_change = "decrease"
+    # else:
+    #     weight_change = "increase"
 
-    if environment == "home-workout":
-        environment = "home"
-    else:
-        environment = "gym"
+    # if environment == "home-workout":
+    #     environment = "home"
+    # else:
+    #     environment = "gym"
+
+    # if goal == "weight-loss":
+    #     goal = "weight loss"
     
  
-
-    # Example SQL query (adjust table/column names as needed)
     cursor.execute(
-        """
-        SELECT workout_plan
-        FROM workout_plans
-        WHERE goal = ?
-          AND split = ?
-          AND environment = ?
-          AND weight_change = ?
-        """,
-        (goal, split, environment, weight_change)
+        "SELECT last_workout_plan FROM user_details WHERE username = ?",
+        (session["username"],)
     )
-    plan_row = cursor.fetchone()
-    connect.close()
-
-    workout_plan = plan_row["workout_plan"] if plan_row else None
-
+    row = cursor.fetchone()
+    workout_plan = row["last_workout_plan"] if row and row["last_workout_plan"] else None
+    session["workout_plan"] = workout_plan
     return render_template("final_plan.html", workout_plan=workout_plan)
+
+@app.route("/cancel_plan")
+@login_required
+def cancel_plan():
+    connect = get_db_connection()
+    cursor = connect.cursor()
+    cursor.execute(
+        "DELETE FROM user_details WHERE username = ?",
+        (session["username"],)
+    )
+    connect.commit()
+    connect.close()
+    for key in ["workout_plan", "goal", "split", "current_weight", "desired_weight", "workout"]:
+        session.pop(key, None)
+    return redirect("/")

@@ -1,10 +1,21 @@
 {% extends "layout.html" %}
 
 {% block title %}
-GymTroll: Creating Plan
+GymTroll: Personalised Plan
 {% endblock %}
 
 {% block main %}
 <h1> Your Personalized Workout Plan</h1>
-<div style="color: white; font-size: 30px;"> {{workout_plan}} </div>
+{% if workout_plan %}
+<div style="color: white; font-size: 30px;" class="custom-container custom-plan fade-in" style="padding: 10px;"> 
+    <pre>{{workout_plan}}</pre> 
+</div>
+{% else %}
+<div style="color: white; font-size: 30px;" class="custom-container custom-plan fade-in" style="padding: 10px;"> 
+    <p>No workout plan available. Please create a new plan.</p>
+</div>
+{% endif %}
+<div style="padding: 10px;">
+    <button class="btn btn-secondary btn-lg" onclick="document.location='/'" type="button">Go back to Home</button>
+</div>
 {% endblock %}
