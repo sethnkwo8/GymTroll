@@ -74,5 +74,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+// Add this script at the end of your plan.html
+document.addEventListener("DOMContentLoaded", function() {
+    const forms = document.querySelectorAll("form");
+    forms.forEach(form => {
+        form.addEventListener("submit", function() {
+            document.getElementById("loading-screen").style.display = "block";
+        });
+    });
+});
+
 
 

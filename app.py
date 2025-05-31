@@ -245,6 +245,14 @@ def plan():
             else:
                 environment = "gym"
 
+            if goal == "weight loss":
+                if int(current_weight) < int(desired_weight):
+                    return render_template("error.html", code=400, message="Your desired weight can't be more than your current weight during weight loss")
+                
+            if goal == "bulking":
+                if int(current_weight) > int(desired_weight):
+                    return render_template("error.html", code=400, message="Your desired weight can't be less than your current weight during bulking")
+
             connection = get_db_connection()
             cursor = connection.cursor()
             cursor.execute(
@@ -302,28 +310,6 @@ def final_plan():
     connect = get_db_connection()
     cursor = connect.cursor()
 
-    # # Fetch session variables
-    # goal = session.get("goal")
-    # split = session.get("split")
-    # environment = session.get("workout")
-    # current_weight = session.get("current_weight")
-    # desired_weight = session.get("desired_weight")
-
-    # # Determine weight change direction
-    # if int(current_weight) > int(desired_weight):
-    #     weight_change = "decrease"
-    # else:
-    #     weight_change = "increase"
-
-    # if environment == "home-workout":
-    #     environment = "home"
-    # else:
-    #     environment = "gym"
-
-    # if goal == "weight-loss":
-    #     goal = "weight loss"
-    
- 
     cursor.execute(
         "SELECT last_workout_plan FROM user_details WHERE username = ?",
         (session["username"],)
@@ -347,3 +333,50 @@ def cancel_plan():
     for key in ["workout_plan", "goal", "split", "current_weight", "desired_weight", "workout"]:
         session.pop(key, None)
     return redirect("/")
+
+@app.route("/workout_library")
+@login_required
+def workout_library():
+
+    return render_template('workout_library.html')
+
+@app.route("/bmi_calculator")
+@login_required
+def bmi_calculator():
+
+    return render_template('bmi_calculator.html')
+
+@app.route("/nutrition")
+@login_required
+def nutrition():
+
+    return render_template('nutrition.html')
+
+@app.route("/start_plan")
+@login_required
+def start_plan():
+    # Clear only plan-related session variables
+    for key in ["goal", "split", "current_weight", "desired_weight", "workout"]:
+        session.pop(key, None)
+    return redirect("/plan")
+
+@app.route("/plan/back/<step>")
+@login_required
+def plan_back(step):
+    # Define the order of steps
+    steps = ["goal", "split", "current_weight", "desired_weight", "workout"]
+    # Map step names in URL to session keys
+    step_map = {
+        "goal": "goal",
+        "split": "split",
+        "current_weight": "current_weight",
+        "desired_weight": "desired_weight",
+        "workout": "workout"
+    }
+    # Find the index of the step to go back to
+    if step in step_map:
+        idx = steps.index(step_map[step])
+        # Clear this step and all steps after it
+        for s in steps[idx:]:
+            session.pop(s, None)
+    return redirect("/plan")

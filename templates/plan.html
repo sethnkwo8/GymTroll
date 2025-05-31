@@ -46,13 +46,16 @@ GymTroll: Create your plan
                 </div> 
             </label>
         </div>
+        <div class="container-fluid text-center">
+        <button type="button" class="btn btn-secondary btn-lg" style="margin-top: 20px; margin-left: 10px;" onclick="window.location.href='/'">Go Back</button>
+        </div>
     </div>
     </form>
 
     {% elif step == "split" %}
     <p style="font-size: 50px;">How many days split do you want?</p>
     <form action="/plan" method="post">
-        <select class="form-select form-select-lg mb-3 custom-select" name="split" aria-label="Select your split">
+        <select class="form-select form-select-lg mb-3 custom-select" name="split" aria-label="Select your split" required>
             <option value="" disabled selected>Choose your split</option>
             <option value="3">Three</option>
             <option value="4">Four</option>
@@ -61,20 +64,23 @@ GymTroll: Create your plan
             <option value="5">Seven</option>
         </select>
         <button type="submit" class="btn btn-primary btn-lg" style="margin-top: 20px;">Next</button>
+        <button type="button" class="btn btn-secondary btn-lg" style="margin-top: 20px; margin-left: 10px;" onclick="window.location.href='/plan/back/goal'">Go Back</button>
     </form>
 
     {% elif step == "current_weight" %}
     <p style="font-size: 50px;">What is your current weight?</p>
     <form action="/plan" method="post">
-        <input type="number" min="30" max="250" name="current-weight" class="form-control" placeholder="Current weight (kg)">
+        <input type="number" min="30" max="250" name="current-weight" class="form-control" placeholder="Current weight (kg)" required>
         <button type="submit" class="btn btn-primary btn-lg" style="margin-top: 20px;">Next</button>
+        <button type="button" class="btn btn-secondary btn-lg" style="margin-top: 20px; margin-left: 10px;" onclick="window.location.href='/plan/back/split'">Go Back</button>
     </form>
 
     {% elif step == "desired_weight" %}
     <p style="font-size: 50px;">What is your desired weight?</p>
     <form action="/plan" method="post">
-        <input type="number" min="30" max="250" name="desired-weight" class="form-control" placeholder="Desired weight (kg)">
+        <input type="number" min="30" max="250" name="desired-weight" class="form-control" placeholder="Desired weight (kg)" required>
         <button type="submit" class="btn btn-primary btn-lg" style="margin-top: 20px;">Next</button>
+        <button type="button" class="btn btn-secondary btn-lg" style="margin-top: 20px; margin-left: 10px;" onclick="window.location.href='/plan/back/current_weight'">Go Back</button>
     </form>
 
     {% elif step == "workout" %}
@@ -103,6 +109,7 @@ GymTroll: Create your plan
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary btn-lg" id="submit-button" style="margin-top: 20px;">Submit</button>
+                <button type="button" class="btn btn-secondary btn-lg" style="margin-top: 20px; margin-left: 10px;" onclick="window.location.href='/plan/back/desired_weight'">Go Back</button>
             </form>
         </div>
     </div>

@@ -10,13 +10,18 @@ GymTroll: Personalised Plan
 <div style="color: white; font-size: 30px;" class="custom-container custom-plan fade-in" style="padding: 10px;"> 
     <pre>{{workout_plan}}</pre> 
 </div>
-{% else %}
-<div style="color: white; font-size: 30px;" class="custom-container custom-plan fade-in" style="padding: 10px;"> 
-    <p>No workout plan available. Please create a new plan.</p>
-</div>
-{% endif %}
 <div style="padding: 10px;">
     <button class="btn btn-secondary btn-lg" onclick="document.location='/'" type="button">Go back to Home</button>
     <button class="btn btn-secondary btn-lg" onclick="document.location='/cancel_plan'" type="button">Cancel Plan</button>
 </div>
+{% else %}
+<div style="color: white; font-size: 30px;" class="custom-container custom-plan fade-in" style="padding: 10px;"> 
+    <p>No workout plan available. Please create a new plan.</p>
+</div>
+<div style="padding: 10px;">
+    <button class="btn btn-secondary btn-lg" onclick="document.location='/'" type="button">Go back to Home</button>
+    <button class="btn btn-secondary btn-lg" onclick="document.location='/start_plan'" type="button">Create Plan</button>
+</div>
+{% endif %}
+
 {% endblock %}
