@@ -18,8 +18,20 @@ footer {
     font-size: 20px;
 }
 
+li {
+    font-size: 25px;
+    text-align: left;
+}
+
 nav{
     background-color: #272727;
+}
+
+table, th, td {
+    border: 1px solid black;
+    color: white;
+    font-size: 25px;
+    padding: 10px;
 }
 
 .card-body{

@@ -340,9 +340,38 @@ def workout_library():
 
     return render_template('workout_library.html')
 
-@app.route("/bmi_calculator")
+@app.route("/bmi_calculator", methods=["GET", "POST"])
 @login_required
 def bmi_calculator():
+    if request.method == "POST":
+        weight = request.form.get("weight")
+        height = request.form.get("height")
+        age = request.form.get("age")
+        gender = request.form.get("gender")
+
+        # Validate presence
+        if not weight or not height:
+            return render_template("error.html", code=400, message="Please enter both weight and height.")
+
+        # Validate numeric
+        try:
+            weight = float(weight)
+            height = float(height)
+        except ValueError:
+            return render_template("error.html", code=400, message="Weight and height must be numbers.")
+
+        # Validate reasonable ranges
+        if weight < 20 or weight > 300:
+            return render_template("error.html", code=400, message="Please enter a valid weight (20-300 kg).")
+        if height < 100 or height > 250:
+            return render_template("error.html", code=400, message="Please enter a valid height (100-250 cm).")
+
+        # Calculate BMI
+        height_m = height / 100  # convert cm to meters
+        bmi = weight / (height_m ** 2)
+        bmi = round(bmi, 2)
+
+        return render_template('bmi_calculator.html', bmi=bmi, weight=weight, height=height)
 
     return render_template('bmi_calculator.html')
 
@@ -355,9 +384,14 @@ def nutrition():
 @app.route("/start_plan")
 @login_required
 def start_plan():
-    # Clear only plan-related session variables
+    # Clear plan-related session variables
     for key in ["goal", "split", "current_weight", "desired_weight", "workout"]:
         session.pop(key, None)
+    # Remove user row from user_details
+    connection = get_db_connection()
+    connection.execute("DELETE FROM user_details WHERE username = ?", (session["username"],))
+    connection.commit()
+    connection.close()
     return redirect("/plan")
 
 @app.route("/plan/back/<step>")
