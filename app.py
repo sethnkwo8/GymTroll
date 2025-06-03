@@ -1,8 +1,10 @@
 from bcrypt import gensalt, checkpw, hashpw # For hashing passwords
 import sqlite3
+import smtplib
+from email.mime.text import MIMEText
 
 from datetime import timedelta # For session lifetime
-from flask import Flask, render_template, redirect, request, session
+from flask import Flask, render_template, redirect, request, session, flash
 from flask_session import Session
 from functools import wraps # For login decorator
 
@@ -300,8 +302,31 @@ def plan():
 def about():
     return render_template("about.html")
 
-@app.route("/contact")
+@app.route("/contact", methods=["GET", "POST"])
 def contact():
+    if request.method == "POST":
+        user_email = request.form.get("user_email")
+        title = request.form.get("title")
+        message = request.form.get("message")
+
+        # Compose email
+        full_message = f"Message from: {user_email}\n\n{message}"
+        msg = MIMEText(full_message)
+        msg["Subject"] = title
+        msg["From"] = "sethnkwocool@gmail.com"  # Your email 
+        msg["To"] = "sethnkwocool@gmail.com"    # Your email
+        msg["Reply-To"] = user_email            # User's email for reply
+
+        # Send email (using Gmail SMTP as example)
+        try:
+            with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+                server.login("sethnkwocool@gmail.com", "your_app_password")
+                server.send_message(msg)
+            flash("Message sent successfully!", "success")
+        except Exception as e:
+            flash("Failed to send message: " + str(e), "danger")
+
+        return redirect("/contact")
     return render_template("contact.html")
 
 @app.route("/final_plan")
