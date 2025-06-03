@@ -2,3 +2,4 @@ Flask
 requests
 Flask-Session
 bcrypt
+email-validator
